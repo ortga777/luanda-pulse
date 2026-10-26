@@ -6,7 +6,6 @@ import binascii
 import json
 import logging
 import os
-import re
 import uuid
 from datetime import UTC, datetime
 from typing import Any
@@ -16,7 +15,6 @@ from botocore.exceptions import BotoCoreError, ClientError
 
 from luanda_pulse.analyzer import (
     InputValidationError,
-    MAX_IMAGE_BYTES,
     ReportAnalysis,
     classify_labels,
     validate_address_text,
