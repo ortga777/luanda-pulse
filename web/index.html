@@ -41,7 +41,7 @@
 </main>
 <footer><div class="wrap footer-row"><span>© <span id="year"></span> Luanda Pulse · Projeto cívico para Luanda, Angola</span><span>Resultados automáticos não substituem validação humana.</span></div></footer>
 <script>
-const API_URL = ""; // Configure a URL HTTPS do endpoint API Gateway antes de publicar.
+const API_URL = window.LUANDA_PULSE_API_URL || ""; // Configurado pelo pipeline de publicação.
 const form=document.querySelector("#report-form"), photo=document.querySelector("#photo"), feedback=document.querySelector("#feedback"), button=document.querySelector("#submit-btn");
 document.querySelector("#year").textContent=new Date().getFullYear();
 photo.addEventListener("change",()=>{const file=photo.files[0];if(!file){document.querySelector("#preview-wrap").classList.add("hidden");return}if(!["image/jpeg","image/png"].includes(file.type)){feedback.textContent="Formato inválido. Escolha uma imagem JPEG ou PNG.";photo.value="";return}document.querySelector("#preview").src=URL.createObjectURL(file);document.querySelector("#file-meta").textContent=file.name+" · "+Math.round(file.size/1024)+" KB";document.querySelector("#preview-wrap").classList.remove("hidden")});
