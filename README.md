@@ -4,7 +4,7 @@
 
 Luanda Pulse is intended to help citizens submit reports about road damage, accumulated waste, broken streetlights, and flooding. Reports combine image-analysis signals with a geocoded, user-provided address and remain pending review until validated.
 
-> **Project status: foundation in progress.** This repository is not yet a production service. Authentication, persistent report storage, upload workflow, frontend, operational monitoring, and a validated urban-issue classifier are still required before public deployment.
+> **Project status: submission build in progress.** A responsive citizen-reporting interface, a report-submission Lambda handler, a private S3 storage design, and a console deployment checklist are now included. The site and AWS API still require deployment and end-to-end verification; do not treat them as live until those steps pass.
 
 ## Principles
 
@@ -53,6 +53,15 @@ The Lambda runtime uses these environment variables:
 - Optional `REKOGNITION_PROJECT_VERSION_ARN` for a future Custom Labels integration.
 
 The current handler uses `DetectLabels` as a conservative baseline and does not yet invoke Custom Labels. Do not treat its output as a validated domain-specific classifier.
+
+## Web interface and deadline deployment
+
+- Web app source: [web/index.html](web/index.html)
+- AWS Lambda console-ready handler: [deployment/lambda_function.py](deployment/lambda_function.py)
+- AWS Console checklist: [docs/deadline-deployment.md](docs/deadline-deployment.md)
+- GitHub Pages workflow: [`.github/workflows/pages.yml`](.github/workflows/pages.yml)
+
+The form remains disabled until a real HTTPS API Gateway endpoint is configured as the repository Actions variable `LUANDA_PULSE_API_URL`. The public endpoint needs throttling and end-to-end verification before real citizens use it.
 
 ## Architecture and security
 
