@@ -7,19 +7,58 @@ import json
 import logging
 import os
 import uuid
-from datetime import UTC, datetime
 from dataclasses import asdict, dataclass
+from datetime import UTC, datetime
 from typing import Any
 
 import boto3
 from botocore.exceptions import BotoCoreError, ClientError
 
-from luanda_pulse.analyzer import (
-    InputValidationError,
-    ReportAnalysis,
-    classify_labels,
-    validate_address_text,
-)
+class InputValidationError(ValueError):
+    """Raised when a submitted report is invalid."""
+
+
+def validate_address_text(address_text: str) -> str:
+    if not isinstance(address_text, str):
+        raise InputValidationError("address_text must be a string")
+    normalized = " ".join(address_text.split())
+    if not normalized:
+        raise InputValidationError("address_text is required")
+    if len(normalized) > 500:
+        raise InputValidationError("address_text must be 500 characters or fewer")
+    return normalized
+
+
+def classify_labels(labels: list[dict[str, Any]]) -> tuple[str, float | None, str]:
+    supported = {"POTHOLE", "TRASH_ACCUMULATION", "BROKEN_STREETLIGHT", "FLOODING"}
+    scores: dict[str, float] = {}
+    for label in labels:
+        name, confidence = label.get("Name"), label.get("Confidence")
+        if not isinstance(name, str) or not isinstance(confidence, (int, float)):
+            continue
+        normalized = name.strip().upper().replace(" ", "_")
+        if normalized in supported:
+            scores[normalized] = max(scores.get(normalized, 0.0), float(confidence) / 100)
+    if not scores:
+        return "UNKNOWN", None, "UNASSESSED"
+    issue_type, confidence = max(scores.items(), key=lambda item: item[1])
+    return issue_type, round(min(max(confidence, 0.0), 1.0), 4), "UNASSESSED"
+
+
+@dataclass(frozen=True)
+class ReportAnalysis:
+    issue_type: str
+    classification_confidence: float | None
+    severity_label: str
+    description_for_report: str
+    formatted_address: str | None
+    coordinates: list[float] | None
+    location_source: str
+    location_verified: bool
+    status: str
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
