@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="pt-AO">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#071b2c">
+<title>Luanda Pulse — Da denúncia à ação</title>
+<style>
+:root{color-scheme:dark;--bg:#071b2c;--panel:#10283b;--line:#29465b;--ink:#f2f7fb;--muted:#adc1d0;--mint:#62e6c2;--gold:#ffca76;--danger:#ff9e9e}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 85% 0%,#17465a 0,transparent 38%),var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}a{color:var(--mint)}.wrap{width:min(1080px,92vw);margin:auto}.nav{padding:20px 0;border-bottom:1px solid #ffffff18;display:flex;align-items:center;justify-content:space-between;gap:14px}.brand{font-weight:850;letter-spacing:.02em}.brand span{color:var(--mint)}.pill{font-size:.78rem;border:1px solid #ffffff30;border-radius:99px;padding:5px 10px;color:var(--muted)}.hero{padding:52px 0 32px;display:grid;grid-template-columns:1.1fr .9fr;gap:30px;align-items:center}.eyebrow{color:var(--mint);font-weight:750;text-transform:uppercase;letter-spacing:.14em;font-size:.76rem}h1{font-size:clamp(2.4rem,6vw,4.6rem);line-height:1.02;letter-spacing:-.05em;margin:14px 0 20px}.hero p{color:var(--muted);max-width:58ch}.visual{border:1px solid var(--line);border-radius:24px;background:linear-gradient(145deg,#16384a,#0c2031);padding:24px;min-height:235px;display:flex;flex-direction:column;justify-content:space-between}.visual .big{font-size:4rem;line-height:1}.visual .steps{display:flex;gap:8px;flex-wrap:wrap}.steps span{border:1px solid #ffffff22;border-radius:10px;padding:8px 10px;font-size:.82rem;color:var(--muted)}.section{padding:24px 0 64px}.section-head{margin-bottom:20px}.section-head h2{font-size:1.7rem;margin:0 0 6px}.section-head p{color:var(--muted);margin:0}.layout{display:grid;grid-template-columns:1.1fr .9fr;gap:20px}.card{background:#0e2435;border:1px solid var(--line);border-radius:20px;padding:22px}.card h3{margin:0 0 6px}.hint{color:var(--muted);font-size:.9rem;margin:0 0 18px}label{display:block;font-size:.9rem;font-weight:650;margin:16px 0 7px}input,select,textarea{font:inherit;color:var(--ink);background:#071b2c;border:1px solid #35536a;border-radius:11px;padding:12px;width:100%;min-width:0}input[type=file]{padding:10px}textarea{min-height:90px;resize:vertical}.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.btn{border:0;border-radius:12px;background:var(--mint);color:#06251f;font:750 1rem system-ui;padding:13px 17px;cursor:pointer;width:100%;margin-top:18px}.btn:disabled{opacity:.55;cursor:wait}.notice{border-radius:12px;padding:12px 14px;background:#142f42;color:var(--muted);font-size:.9rem;margin-top:14px}.notice strong{color:var(--ink)}.result{white-space:pre-wrap;overflow-wrap:anywhere}.status{color:var(--gold)}.list{display:grid;gap:12px;margin-top:18px}.item{border:1px solid var(--line);border-radius:13px;padding:14px}.item b{display:block}.item small{color:var(--muted)}footer{border-top:1px solid #ffffff18;padding:24px 0 34px;color:var(--muted);font-size:.85rem}.footer-row{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}.hidden{display:none!important}
+@media(max-width:760px){.hero,.layout{grid-template-columns:1fr}.hero{padding-top:34px}.visual{min-height:180px}.row{grid-template-columns:1fr}.card{padding:17px}}
+</style>
+</head>
+<body>
+<header class="wrap nav"><div class="brand">LUANDA <span>PULSE</span></div><div class="pill">Cidadania · Evidência · Ação</div></header>
+<main class="wrap">
+<section class="hero">
+<div><div class="eyebrow">Da fotografia à ação urbana</div><h1>Uma Luanda melhor começa com uma denúncia.</h1><p>Registe problemas urbanos como buracos na estrada, lixo acumulado, iluminação avariada ou inundações. Cada denúncia deve ser verificada antes de ser considerada confirmada.</p></div>
+<div class="visual"><div class="big" aria-hidden="true">⌖</div><div><div class="eyebrow">Como funciona</div><div class="steps"><span>01 · Registar</span><span>02 · Analisar</span><span>03 · Rever</span></div></div></div>
+</section>
+<section class="section">
+<div class="section-head"><h2>Registar um problema</h2><p>Preencha os dados e envie a fotografia para análise.</p></div>
+<div class="layout">
+<form id="report-form" class="card">
+<h3>Nova denúncia</h3><p class="hint">Os campos com * são obrigatórios. Não inclua pessoas identificáveis na fotografia, sempre que possível.</p>
+<label for="issue">Tipo de problema *</label><select id="issue" required><option value="">Selecione uma categoria</option><option value="POTHOLE">Buraco ou estrada danificada</option><option value="TRASH_ACCUMULATION">Lixo acumulado</option><option value="BROKEN_STREETLIGHT">Iluminação pública avariada</option><option value="FLOODING">Inundação</option><option value="UNKNOWN">Não sei identificar</option></select>
+<label for="address">Endereço ou referência em Luanda *</label><input id="address" maxlength="300" placeholder="Ex.: Maianga, perto de..." required>
+<label for="photo">Fotografia do problema *</label><input id="photo" type="file" accept="image/jpeg,image/png" required>
+<div id="preview-wrap" class="notice hidden"><img id="preview" alt="Pré-visualização da fotografia" style="max-width:100%;max-height:220px;border-radius:9px"><div id="file-meta"></div></div>
+<label for="description">Descrição adicional (opcional)</label><textarea id="description" maxlength="1000" placeholder="Explique o que observou, sem incluir dados pessoais."></textarea>
+<button class="btn" id="submit-btn" type="submit">Enviar denúncia</button>
+<div id="feedback" class="notice" role="status" aria-live="polite">O serviço de envio só fica ativo depois de configurar o endpoint seguro da API.</div>
+</form>
+<aside class="card"><h3>O que acontece depois?</h3><div class="list">
+<div class="item"><b>1. Receção</b><small>A denúncia recebe uma referência quando o servidor a aceita.</small></div>
+<div class="item"><b>2. Análise assistida</b><small>A análise automática é indicativa e pode não identificar corretamente o problema.</small></div>
+<div class="item"><b>3. Revisão humana</b><small>O resultado permanece pendente de validação; a gravidade não é inferida pela confiança do modelo.</small></div>
+</div><div class="notice"><strong>Transparência:</strong> a localização é baseada no endereço indicado pelo cidadão e não comprova onde a fotografia foi capturada.</div><div class="notice">Não envie informação confidencial. As fotografias devem ser tratadas como dados privados.</div></aside>
+</div>
+</section>
+</main>
+<footer><div class="wrap footer-row"><span>© <span id="year"></span> Luanda Pulse · Projeto cívico para Luanda, Angola</span><span>Resultados automáticos não substituem validação humana.</span></div></footer>
+<script>
+const API_URL = ""; // Configure a URL HTTPS do endpoint API Gateway antes de publicar.
+const form=document.querySelector("#report-form"), photo=document.querySelector("#photo"), feedback=document.querySelector("#feedback"), button=document.querySelector("#submit-btn");
+document.querySelector("#year").textContent=new Date().getFullYear();
+photo.addEventListener("change",()=>{const file=photo.files[0];if(!file){document.querySelector("#preview-wrap").classList.add("hidden");return}if(!["image/jpeg","image/png"].includes(file.type)){feedback.textContent="Formato inválido. Escolha uma imagem JPEG ou PNG.";photo.value="";return}document.querySelector("#preview").src=URL.createObjectURL(file);document.querySelector("#file-meta").textContent=file.name+" · "+Math.round(file.size/1024)+" KB";document.querySelector("#preview-wrap").classList.remove("hidden")});
+function toBase64(file){return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(String(reader.result).split(",")[1]);reader.onerror=reject;reader.readAsDataURL(file)})}
+form.addEventListener("submit",async e=>{e.preventDefault();const file=photo.files[0];if(!file)return;if(file.size>5*1024*1024){feedback.textContent="A fotografia deve ter no máximo 5 MB.";return}if(!API_URL){feedback.textContent="Envio ainda não ativado: falta configurar e publicar o endpoint HTTPS do backend. Nenhuma denúncia foi enviada.";return}button.disabled=true;feedback.textContent="A enviar para o serviço seguro…";try{const payload={issue_type:document.querySelector("#issue").value,address_text:document.querySelector("#address").value.trim(),description:document.querySelector("#description").value.trim(),image_base64:await toBase64(file),image_content_type:file.type,file_name:file.name};const res=await fetch(API_URL,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(payload)});const data=await res.json().catch(()=>({}));if(!res.ok)throw new Error(data.message||data.error||("Erro HTTP "+res.status));feedback.textContent="Denúncia recebida. Referência: "+(data.report_id||data.reportId||"a confirmar")+". Estado: "+(data.status||"PENDING_REVIEW")+". Guarde esta referência.";form.reset();document.querySelector("#preview-wrap").classList.add("hidden")}catch(err){feedback.textContent="Não foi possível enviar a denúncia: "+err.message+". Nenhuma confirmação foi emitida."}finally{button.disabled=false}});
+</script>
+</body>
+</html>
