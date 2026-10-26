@@ -1,0 +1,56 @@
+name: Deploy Luanda Pulse web
+
+on:
+  push:
+    branches: ["feat/working-submission", "main"]
+    paths:
+      - "web/**"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Configure API endpoint
+        env:
+          LUANDA_PULSE_API_URL: ${{ vars.LUANDA_PULSE_API_URL }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          value = os.environ.get("LUANDA_PULSE_API_URL", "").strip()
+          Path("web/config.js").write_text(
+              "window.LUANDA_PULSE_API_URL = " + json.dumps(value) + ";\n",
+              encoding="utf-8",
+          )
+          PY
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+      - name: Upload site artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: web
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

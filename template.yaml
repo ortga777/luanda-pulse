@@ -1,0 +1,102 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: Luanda Pulse initial citizen report submission API and private storage.
+
+Parameters:
+  CorsAllowOrigin:
+    Type: String
+    Default: "*"
+    Description: Set to the exact HTTPS frontend origin before public launch.
+
+Resources:
+  ReportsBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      VersioningConfiguration:
+        Status: Enabled
+      LifecycleConfiguration:
+        Rules:
+          - Id: ExpireReportPhotosAfter180Days
+            Status: Enabled
+            Prefix: photos/
+            ExpirationInDays: 180
+          - Id: ExpireReportRecordsAfter365Days
+            Status: Enabled
+            Prefix: reports/
+            ExpirationInDays: 365
+
+  LuandaPulsePlaceIndex:
+    Type: AWS::Location::PlaceIndex
+    Properties:
+      DataSource: Esri
+      Description: Geocode citizen-provided addresses for Luanda Pulse
+      IndexName: !Sub "${AWS::StackName}-places"
+
+  SubmitReportFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/
+      Handler: luanda_pulse.submit_handler.handler
+      Runtime: python3.12
+      Architectures: [arm64]
+      MemorySize: 512
+      Timeout: 30
+      Environment:
+        Variables:
+          LUANDA_PULSE_REPORTS_BUCKET: !Ref ReportsBucket
+          LUANDA_PULSE_PLACE_INDEX: !Ref LuandaPulsePlaceIndex
+          CORS_ALLOW_ORIGIN: !Ref CorsAllowOrigin
+      Policies:
+        - Statement:
+            - Sid: WritePrivateReportObjects
+              Effect: Allow
+              Action:
+                - s3:PutObject
+                - s3:DeleteObject
+              Resource:
+                - !Sub "${ReportsBucket.Arn}/photos/*"
+                - !Sub "${ReportsBucket.Arn}/reports/*"
+            - Sid: AnalyzeCitizenImages
+              Effect: Allow
+              Action:
+                - rekognition:DetectLabels
+              Resource: "*"
+            - Sid: GeocodeUserAddress
+              Effect: Allow
+              Action:
+                - geo:SearchPlaceIndexForText
+              Resource: !GetAtt LuandaPulsePlaceIndex.IndexArn
+      Events:
+        SubmitReport:
+          Type: HttpApi
+          Properties:
+            Path: /reports
+            Method: POST
+        Preflight:
+          Type: HttpApi
+          Properties:
+            Path: /reports
+            Method: OPTIONS
+
+Outputs:
+  ApiBaseUrl:
+    Description: HTTPS API base URL. Append /reports for report submissions.
+    Value: !Sub "https://${ServerlessHttpApi}.execute-api.${AWS::Region}.amazonaws.com"
+  SubmitEndpoint:
+    Description: Endpoint used by the Luanda Pulse web form
+    Value: !Sub "https://${ServerlessHttpApi}.execute-api.${AWS::Region}.amazonaws.com/reports"
+  ReportsBucketName:
+    Description: Private bucket storing report photos and JSON records
+    Value: !Ref ReportsBucket
+  PlaceIndexName:
+    Description: Amazon Location place index
+    Value: !Ref LuandaPulsePlaceIndex
