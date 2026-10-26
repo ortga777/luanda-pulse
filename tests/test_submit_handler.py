@@ -10,7 +10,8 @@ def test_options_preflight_returns_cors_headers():
 
 
 def test_missing_address_is_rejected_before_aws_calls():
-    result = handler({"body": json.dumps({"image_content_type": "image/jpeg", "image_base64": "abc"})}, None)
+    event = {"body": json.dumps({"image_content_type": "image/jpeg", "image_base64": "abc"})}
+    result = handler(event, None)
     assert result["statusCode"] == 400
     assert json.loads(result["body"])["error"] == "INVALID_INPUT"
 
