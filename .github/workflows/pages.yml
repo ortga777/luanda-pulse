@@ -33,14 +33,12 @@ jobs:
           from pathlib import Path
           value = os.environ.get("LUANDA_PULSE_API_URL", "").strip()
           Path("web/config.js").write_text(
-              "window.LUANDA_PULSE_API_URL = " + json.dumps(value) + ";\\n",
+              "window.LUANDA_PULSE_API_URL = " + json.dumps(value) + ";\n",
               encoding="utf-8",
           )
           PY
       - name: Configure Pages
         uses: actions/configure-pages@v5
-        with:
-          enablement: true
       - name: Upload site artifact
         uses: actions/upload-pages-artifact@v3
         with:
