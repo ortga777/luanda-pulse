@@ -1,7 +1,10 @@
 import pytest
 
 from luanda_pulse.analyzer import (
-    InputValidationError, classify_labels, parse_s3_uri, validate_address_text,
+    InputValidationError,
+    classify_labels,
+    parse_s3_uri,
+    validate_address_text,
 )
 
 
