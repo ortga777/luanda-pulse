@@ -7,13 +7,13 @@ import json
 import logging
 import os
 import uuid
-
 from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
 from typing import Any
 
 import boto3
 from botocore.exceptions import BotoCoreError, ClientError
+
 
 class InputValidationError(ValueError):
     """Raised when a submitted report is invalid."""
