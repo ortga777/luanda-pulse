@@ -10,8 +10,12 @@ import boto3
 from botocore.exceptions import BotoCoreError, ClientError
 
 from luanda_pulse.analyzer import (
-    MAX_IMAGE_BYTES, InputValidationError, ReportAnalysis, classify_labels,
-    parse_s3_uri, validate_address_text,
+    MAX_IMAGE_BYTES,
+    InputValidationError,
+    ReportAnalysis,
+    classify_labels,
+    parse_s3_uri,
+    validate_address_text,
 )
 
 logger = logging.getLogger()
